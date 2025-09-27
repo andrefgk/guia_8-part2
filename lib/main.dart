@@ -55,23 +55,35 @@ class _MyHomePageState extends State<MyHomePage> { // Clase del estado
     _cargarListaLibros(); // Recarga la lista para mostrar el nuevo libro
   }
 
-  void _mostrarVentanaAgregar() { // Muestra el diálogo para agregar un nuevo libro
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
+  void _mostrarVentanaAgregar() { // Función privada para mostrar el diálogo de agregar título
+    // Limpiar el campo al abrir el diálogo
+    _EditTituloLibro.clear(); // Se limpia el contenido del TextField antes de mostrar el diálogo
+    
+    showDialog( // Se muestra un diálogo modal
+      context: context, // Se utiliza el contexto actual para mostrar el diálogo
+      builder: (context) { // Función que construye el contenido del diálogo
+        return AlertDialog( // Se retorna un AlertDialog como contenido del diálogo
           title: const Text("Agregar Titulo"), // Título del diálogo
           content: TextField( // Campo de texto para ingresar el título
-            controller: _EditTituloLibro, // Controlador del campo
-            decoration: const InputDecoration(hintText: "Ingrese el titulo"), // Placeholder
+            controller: _EditTituloLibro, // Controlador que gestiona el texto ingresado
+            decoration: const InputDecoration(hintText: "Ingrese el titulo"), // Decoración del campo con texto de sugerencia
+            autofocus: true, // Enfocar automáticamente el campo al abrir el diálogo
           ),
-          actions: [ // Botones del diálogo
-            TextButton(
-              onPressed: () {
+          actions: [ // Lista de botones en la parte inferior del diálogo
+            // Botón para cerrar el diálogo
+            TextButton( // Botón de tipo texto
+              onPressed: () { // Acción al presionar el botón
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: Text("Cerrar") // Texto del botón
+            ),
+            // Botón para agregar (mantiene el diálogo abierto)
+            TextButton( // Botón de tipo texto
+              onPressed: () { // Acción al presionar el botón
                 if (_EditTituloLibro.text.isNotEmpty) { // Verifica que el campo no esté vacío
-                  _agregarNuevoLibro(_EditTituloLibro.text.toString()); // Agrega el libro
-                  _EditTituloLibro.clear(); // Limpia el campo
-                  Navigator.of(context).pop(); // Cierra el diálogo
+                  _agregarNuevoLibro(_EditTituloLibro.text.toString()); // Llama a la función para agregar el nuevo libro con el texto ingresado
+                  _EditTituloLibro.clear(); // Limpia el campo de texto después de agregar
+                  // Mantener el diálogo abierto - NO llamar a Navigator.pop()
                 }
               },
               child: Text("Agregar") // Texto del botón
